@@ -15,31 +15,28 @@ def top_ten(subreddit):
     Args:
         subreddit (str): The subreddit to fetch data from.
     """
-    # Reddit API URL to get "hot" posts from a subreddit
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-
-    # Custom User-Agent: Reddit wants you to identify your app
-    headers = {"User-Agent": "MyTopTenChecker/1.0"}
-    # Query parameters: we ask for 10 posts
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {"User-Agent": "MyRedditScript/1.0"}
     params = {"limit": 10}
 
     try:
-        # Make the request
-        response = requests.get(url, headers=headers,
-                                params=params, allow_redirects=False)
+        response = requests.get(url, headers=headers, params=params,
+                                allow_redirects=False)
 
-        # If the subreddit is invalid, Reddit sends 302 or 404
+        # If subreddit doesn't exist
         if response.status_code != 200:
             print("None")
             return
-        # Parse the JSON response
+
         data = response.json()
         posts = data.get("data", {}).get("children", [])
-        # Loop through each post and print the title
-        for post in posts:
-            title = post.get("data", {}).get("title")
-            print(title)
 
-    except requests.RequestException:
-        # If something goes wrong with the network or request
+        if not posts:
+            print("None")
+            return
+
+        for post in posts:
+            print(post.get("data", {}).get("title"))
+
+    except Exception:
         print("None")
