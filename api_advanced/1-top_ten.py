@@ -1,48 +1,49 @@
 #!/usr/bin/python3
 """
-This module prints the top 10 hot posts of a subreddit.
+This module fetches and prints the titles of the first 10 hot posts
+from a given subreddit using the Reddit API.
 """
 
 
-import requests  # Permet d'envoyer une requête vers un site web
+import requests
 
 
 def top_ten(subreddit):
     """
-    Affiche les 10 premiers titres des posts les plus populaires d'un subreddit.
+    Prints the titles of the top 10 hot posts of a subreddit.
+    If the subreddit is invalid or cannot be reached, prints None.
 
     Args:
-        subreddit (str): le nom du groupe Reddit (comme 'funny', 'science', etc.)
+        subreddit (str): The subreddit to fetch data from.
     """
-    # On construit le lien vers Reddit (API spéciale)
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "SimpleScript/1.0"}  # Obligatoire, sinon Reddit dit "non"
-    params = {"limit": 10}  # On veut juste les 10 premiers
+    # Reddit API URL to get "hot" posts from a subreddit
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+
+    # Custom User-Agent: Reddit wants you to identify your app
+    headers = {"User-Agent": "ALUProjectBot/0.1 by ALUStudent"}
+
+    # Query parameters: we ask for 10 posts
+    params = {"limit": 10}
 
     try:
-        # On envoie la requête
-        response = requests.get(url, headers=headers, params=params,
-                                allow_redirects=False)
+        # Make the request
+        response = requests.get(url, headers=headers,
+                                params=params, allow_redirects=False)
 
-        # Si le subreddit est faux (ex: n'existe pas), on affiche None
+        # If the subreddit is invalid, Reddit sends 302 or 404
         if response.status_code != 200:
             print("None")
             return
 
-        # On transforme la réponse en dictionnaire Python
+        # Parse the JSON response
         data = response.json()
-
-        # On prend les posts
         posts = data.get("data", {}).get("children", [])
 
-        # S'il n'y a pas de posts, on affiche None
-        if not posts:
-            print("None")
-            return
-
-        # Sinon, on affiche chaque titre
+        # Loop through each post and print the title
         for post in posts:
-            print(post.get("data", {}).get("title"))
+            title = post.get("data", {}).get("title")
+            print(title)
 
-    except Exception:
-        print("None"))
+    except requests.RequestException:
+        # If something goes wrong with the network or request
+        print("None")
