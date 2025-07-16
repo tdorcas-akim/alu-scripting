@@ -4,6 +4,7 @@ This script defines a function that uses recursion
 to get all hot post titles from a given subreddit.
 """
 
+
 import requests
 
 
