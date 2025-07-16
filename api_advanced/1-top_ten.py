@@ -20,7 +20,7 @@ def top_ten(subreddit):
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
 
     # Custom User-Agent: Reddit wants you to identify your app
-    headers = {"User-Agent": "ALUProjectBot/0.1 by ALUStudent"}
+    headers = {"User-Agent": "linux:topten.bot:v1.0 (by u/realstudent123)"}
 
     # Query parameters: we ask for 10 posts
     params = {"limit": 10}
