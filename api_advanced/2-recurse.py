@@ -53,4 +53,3 @@ def recurse(subreddit, hot_list=[], after=None):
 
     except Exception:
         return None
-    # Something went wrong (network, JSON parsing, etc.)
