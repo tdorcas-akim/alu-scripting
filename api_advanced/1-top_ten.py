@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-
-"""This module prints the top 10 hot posts of a subreddit."""
+"""
+This module prints the top 10 hot posts of a subreddit.
+"""
 
 
 import requests  # Permet d'envoyer une requête vers un site web
