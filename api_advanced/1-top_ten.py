@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-This module fetches and prints the titles of the first 10 hot posts
+"""This module fetches and prints the titles of the first 10 hot posts
 from a given subreddit using the Reddit API.
 """
 
