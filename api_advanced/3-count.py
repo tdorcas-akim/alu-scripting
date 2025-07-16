@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """ Count keywords in titles of hot posts from a subreddit """
-import json
 import requests
 
 
