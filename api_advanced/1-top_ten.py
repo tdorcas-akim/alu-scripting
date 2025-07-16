@@ -1,26 +1,45 @@
 #!/usr/bin/python3
-"""
- A function that queries the Reddit API and prints the titles.
-"""
+"""This module prints the top 10 hot posts of a subreddit."""
 
-import requests
+import requests  # Permet d'envoyer une requête vers un site web
 
 
 def top_ten(subreddit):
-    """Prints the top ten hot posts for a given subreddit"""
+    """
+    Affiche les 10 premiers titres des posts les plus populaires d'un subreddit.
 
-    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-    response = requests.get(url, headers=headers)
+    Args:
+        subreddit (str): le nom du groupe Reddit (comme 'funny', 'science', etc.)
+    """
+    # On construit le lien vers Reddit (API spéciale)
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {"User-Agent": "SimpleScript/1.0"}  # Obligatoire, sinon Reddit dit "non"
+    params = {"limit": 10}  # On veut juste les 10 premiers
 
-    if response.status_code != 200:
-        print(None)
-        return
+    try:
+        # On envoie la requête
+        response = requests.get(url, headers=headers, params=params,
+                                allow_redirects=False)
 
-    data = response.json().get("data")
-    if data is None or len(data.get("children")) == 0:
-        print(None)
-        return
+        # Si le subreddit est faux (ex: n'existe pas), on affiche None
+        if response.status_code != 200:
+            print("None")
+            return
 
-    for child in data.get("children"):
-        print(child.get("data").get("title"))
+        # On transforme la réponse en dictionnaire Python
+        data = response.json()
+
+        # On prend les posts
+        posts = data.get("data", {}).get("children", [])
+
+        # S'il n'y a pas de posts, on affiche None
+        if not posts:
+            print("None")
+            return
+
+        # Sinon, on affiche chaque titre
+        for post in posts:
+            print(post.get("data", {}).get("title"))
+
+    except Exception:
+        print("None"))
