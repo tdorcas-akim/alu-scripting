@@ -52,4 +52,4 @@ def count_words(subreddit, word_list, after=None, word_count={}):
                 print(f"{word}: {count}")
 
     except Exception:
-        return  
+        return
