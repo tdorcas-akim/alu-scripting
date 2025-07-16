@@ -1,42 +1,26 @@
 #!/usr/bin/python3
-"""This module fetches and prints the titles of the first 10 hot posts
-from a given subreddit using the Reddit API.
 """
-
+ A function that queries the Reddit API and prints the titles.
+"""
 
 import requests
 
 
 def top_ten(subreddit):
-    """
-    Prints the titles of the top 10 hot posts of a subreddit.
-    If the subreddit is invalid or cannot be reached, prints None.
+    """Prints the top ten hot posts for a given subreddit"""
 
-    Args:
-        subreddit (str): The subreddit to fetch data from.
-    """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "MyRedditScript/1.0"}
-    params = {"limit": 10}
+    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+    response = requests.get(url, headers=headers)
 
-    try:
-        response = requests.get(url, headers=headers, params=params,
-                                allow_redirects=False)
+    if response.status_code != 200:
+        print(None)
+        return
 
-        # If subreddit doesn't exist
-        if response.status_code != 200:
-            print("None")
-            return
+    data = response.json().get("data")
+    if data is None or len(data.get("children")) == 0:
+        print(None)
+        return
 
-        data = response.json()
-        posts = data.get("data", {}).get("children", [])
-
-        if not posts:
-            print("None")
-            return
-
-        for post in posts:
-            print(post.get("data", {}).get("title"))
-
-    except Exception:
-        print("None")
+    for child in data.get("children"):
+        print(child.get("data").get("title"))
